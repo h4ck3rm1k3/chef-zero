@@ -39,6 +39,7 @@ module ChefZero
           if @last_missing_dep && !cookbook_names.include?(@last_missing_dep)
             return raise RestErrorResponse.new(412, "No such cookbook: #{@last_missing_dep}")
           elsif @last_constraint_failure
+            puts cookbook_names
             return raise RestErrorResponse.new(412, "Could not satisfy version constraints for: #{@last_constraint_failure}")
           else
 
@@ -75,10 +76,13 @@ module ChefZero
 
           # Pick this cookbook, and add dependencies
           cookbook_obj = FFI_Yajl::Parser.parse(get_data(request, request.rest_path[0..1] + ['cookbooks', solve_for, desired_version]), :create_additions => false)
+          puts "cookbook_obj: #{cookbook_obj}"
           cookbook_metadata = cookbook_obj['metadata'] || {}
           cookbook_dependencies = cookbook_metadata['dependencies'] || {}
           dep_not_found = false
           cookbook_dependencies.each_pair do |dep_name, dep_constraint|
+
+            puts "cookbook_obj: #{dep_name dep_constraint}"
             # If the dep is not already in the list, add it to the list to solve
             # and bring in all environment-allowed cookbook versions to desired_versions
             if !new_desired_versions.has_key?(dep_name)
