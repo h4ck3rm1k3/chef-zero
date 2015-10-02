@@ -57,6 +57,9 @@ module ChefZero
 
       def depsolve(request, unsolved, desired_versions, environment_constraints)
         desired_versions.each do |cb, ver|
+
+          puts "desired versions: #{cb} #{ver}"
+
           if ver.empty?
             @last_constraint_failure = cb
             return nil
@@ -82,7 +85,7 @@ module ChefZero
           dep_not_found = false
           cookbook_dependencies.each_pair do |dep_name, dep_constraint|
 
-            puts "cookbook_obj: #{dep_name dep_constraint}"
+            puts "cookbook_obj: dep name #{dep_name} dep constraint #{dep_constraint}"
             # If the dep is not already in the list, add it to the list to solve
             # and bring in all environment-allowed cookbook versions to desired_versions
             if !new_desired_versions.has_key?(dep_name)
